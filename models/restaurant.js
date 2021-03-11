@@ -14,6 +14,6 @@ const mongoose = require("mongoose");
     priceCategory : Number
  });
  //Create Model
- const restaurantModel = mongoose.model("restaurants", restaurantModel)
+ const restaurantModel = mongoose.model("restaurants", restaurantSchema)
 
  module.exports = restaurantModel;
