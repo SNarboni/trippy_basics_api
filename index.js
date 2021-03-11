@@ -30,23 +30,12 @@ app.get("/hotels/:id", async (req, res) => {
 });
 
 app.post("/hotels", async (req, res) => {
-  await hotelModel.create({
-    name: req.body.name,
-    address: req.body.address,
-    city: req.body.city,
-    country: req.body.country,
-    stars: req.body.stars,
-    hasSpa: req.body.hasSpa,
-    hasPool: req.body.hasPool,
-    priceCategory: req.body.priceCategory,
-  });
+  await hotelModel.create(req.body);
 
   res.send(`${req.body.name} à bien été ajouté à la liste`);
   console.log(req.body);
 });
 
 app.put("/hotels/:id?name=newName", async (req, res) => {
-    await hotelModel.updateOne({
-          
-    })
-})
+  await hotelModel.updateOne({});
+});
