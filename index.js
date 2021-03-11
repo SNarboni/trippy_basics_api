@@ -44,3 +44,9 @@ app.post("/hotels", async (req, res) => {
   res.send(`${req.body.name} à bien été ajouté à la liste`);
   console.log(req.body);
 });
+
+app.put("/hotels/:id?name=newName", async (req, res) => {
+    await hotelModel.updateOne({
+          
+    })
+})
