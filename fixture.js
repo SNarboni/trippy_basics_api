@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const hotelModel = require("./models/hotel");
 const restaurantModel = require("./models/restaurant");
 
-mongoose.connect("mongodb://localhost:27017/trippy", () => {
+mongoose.connect("mongodb://localhost:27017/trippy_binome", () => {
   console.log("connecté");
 });
 
