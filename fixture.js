@@ -70,10 +70,10 @@ function createMyHotels() {
       address: hotelAdress[i],
       city: "Paris",
       country: "France",
-      stars: Math.floor(Math.random() * 6),
+      stars: Math.floor(Math.random() * (5 - 1 + 1)),
       hasSpa: Math.random() > 0.5 ? true : false,
       hasPool: Math.random() > 0.5 ? true : false,
-      priceCategory: Math.floor(Math.random() * 4),
+      priceCategory: Math.floor(Math.random() * (3 - 1 + 1)),
       rooms: [],
     });
   }
@@ -98,9 +98,9 @@ function createMyRestaurants() {
       address: "10 avenue de france",
       city: "Paris",
       country: "France",
-      stars: 3,
-      cuisine: true,
-      priceCategory: 3,
+      stars: Math.floor(Math.random() * (3 - 1 + 1)),
+      cuisine: Math.random() > 0.5 ? true : false,
+      priceCategory: Math.floor(Math.random() * (3 - 1 + 1)),
       tables: [],
     });
   }
@@ -198,6 +198,9 @@ async function addTables(restaurantId, tableId1, tableId2) {
 
 // TABLES
 createRoom();
+createTable();
+createHotel();
+createRestaurant();
 
 /*
 createTable();

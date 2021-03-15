@@ -7,9 +7,9 @@ const restaurantSchema = new mongoose.Schema({
   address: String,
   city: String,
   country: String,
-  stars: Number,
+  stars: {type : Number, max: 3, min : 1},
   cuisine: String,
-  priceCategory: Number,
+  priceCategory: {type : Number, max: 3, min : 1},
   tables: [{ type: mongoose.Types.ObjectId, ref: "tables" }],
 });
 //Create Model

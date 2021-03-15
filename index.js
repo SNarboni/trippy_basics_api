@@ -23,18 +23,23 @@ app.listen(port, () => {
 // HOTELS
 
 app.get("/hotels", async (req, res) => {
-  let limitpage = parseInt(req.query.limit);
-  let offset = parseInt(req.query.page) * limitpage;
-  const hotels = await hotelModel
-    .find()
-    .populate("rooms")
-    .limit(limitpage)
-    .skip(offset);
-  res.json(hotels);
-  console.log(hotels);
-  console.log("------------------");
-  console.log("------------------");
-  console.log("------------------");
+  if (parseInt(req.query.limit) && parseInt(req.query.page)) {
+    let limitpage = parseInt(req.query.limit);
+    let offset = parseInt(req.query.page) * limitpage;
+    const hotels = await hotelModel
+      .find()
+      .populate("rooms")
+      .limit(limitpage)
+      .skip(offset);
+    res.json(hotels);
+    console.log(hotels);
+    console.log("------------------");
+    console.log("------------------");
+    console.log("------------------");
+  } else {
+    res.send("Limit or page is not Number");
+  }
+
 });
 
 app.get("/hotels/:id", async (req, res) => {
@@ -72,8 +77,18 @@ app.put("/hotels/:id", async (req, res) => {
 
 app.delete("/hotels/:id", async (req, res) => {
   try {
-    await hotelModel.deleteOne({ _id: req.params.id });
-    res.send(`hotel supprimé`);
+    const result = hotelModel
+      .findById(req.params.id, async function (err, hotel) {
+        if (hotel) {
+          await hotelModel.deleteOne({ _id: req.params.id });
+          res.send(`hotel supprimé`);
+        } else {
+          console.log("pas trouvé");
+          res.send("erreur l'hotel n'a pas été trouvé ou a deja été supprimé");
+        }
+      })
+      .lean();
+
   } catch (err) {
     console.log(err);
   }
@@ -84,18 +99,27 @@ app.delete("/hotels/:id", async (req, res) => {
 // RESTAURANT
 
 app.get("/restaurants", async (req, res) => {
-  let limitpage = parseInt(req.query.limit);
-  let offset = parseInt(req.query.page) * limitpage;
-  const restaurants = await restaurantModel
-    .find()
-    .populate("tables")
-    .limit(limitpage)
-    .skip(offset);
-  res.json(restaurants);
-  console.log(restaurants);
-  console.log("------------------");
-  console.log("------------------");
-  console.log("------------------");
+  // console.log(req.query.page);
+  // console.log(req.query.limit);
+  // console.log("Number :", parseInt(req.query.limit) );
+  // res.send("find");
+  if (parseInt(req.query.limit) && parseInt(req.query.page)) {
+    let limitpage = parseInt(req.query.limit);
+    let offset = parseInt(req.query.page) * limitpage;
+    const restaurants = await restaurantModel
+      .find()
+      .populate("tables")
+      .limit(limitpage)
+      .skip(offset);
+    res.json(restaurants);
+    console.log(restaurants);
+    console.log("------------------");
+    console.log("------------------");
+    console.log("------------------");
+  } else {
+    res.send("Limit or page is not Number");
+  }
+
 });
 
 app.get("/restaurants/:id", async (req, res) => {
@@ -132,9 +156,20 @@ app.put("/restaurants/:id", async (req, res) => {
 });
 
 app.delete("/restaurants/:id", async (req, res) => {
+
   try {
-    await restaurantModel.deleteOne({ _id: req.params.id });
-    res.send(`restaurant supprimé`);
+    const result = restaurantModel
+      .findById(req.params.id, async function (err, restaurant) {
+        if (restaurant) {
+          await restaurantModel.deleteOne({ _id: req.params.id });
+          res.send(`restaurant supprimé`);
+        } else {
+          console.log("pas trouvé");
+          res.send("erreur le restaurant n'a pas été trouvé ou a deja été supprimé");
+        }
+      })
+      .lean();
+
   } catch (err) {
     console.log(err);
   }
@@ -145,12 +180,21 @@ app.delete("/restaurants/:id", async (req, res) => {
 // ROOM
 
 app.get("/rooms", async (req, res) => {
-  const rooms = await roomModel.find();
-  res.json(rooms);
-  console.log(rooms);
-  console.log("------------------");
-  console.log("------------------");
-  console.log("------------------");
+  if (parseInt(req.query.limit) && parseInt(req.query.page)) {
+    let limitpage = parseInt(req.query.limit);
+    let offset = parseInt(req.query.page) * limitpage;
+    const rooms = await roomModel.find()
+      .limit(limitpage)
+      .skip(offset);
+    res.json(rooms);
+    console.log(rooms);
+    console.log("------------------");
+    console.log("------------------");
+    console.log("------------------");
+  } else {
+    res.send("Limit or page is not Number");
+  }
+
 });
 
 app.get("/rooms/:id", async (req, res) => {
@@ -209,14 +253,19 @@ app.delete("/rooms/:id", async (req, res) => {
 // TABLE
 
 app.get("/tables", async (req, res) => {
-  let limitpage = parseInt(req.query.limit);
-  let offset = parseInt(req.query.page) * limitpage;
-  const tables = await tableModel.find().limit(limitpage).skip(offset);
-  res.json(tables);
-  console.log(tables);
-  console.log("------------------");
-  console.log("------------------");
-  console.log("------------------");
+  if (parseInt(req.query.limit) && parseInt(req.query.page)) {
+    let limitpage = parseInt(req.query.limit);
+    let offset = parseInt(req.query.page) * limitpage;
+    const tables = await tableModel.find().limit(limitpage).skip(offset);
+    res.json(tables);
+    console.log(tables);
+    console.log("------------------");
+    console.log("------------------");
+    console.log("------------------");
+  } else {
+    res.send("Limit or page is not Number")
+  }
+
 });
 
 app.get("/tables/:id", async (req, res) => {

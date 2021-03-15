@@ -5,10 +5,10 @@ const hotelSchema = new mongoose.Schema({
   address: String,
   city: String,
   country: String,
-  stars: Number, //1 à 5
+  stars: {type : Number, max: 5, min : 1}, //1 à 5
   hasSpa: Boolean,
   hasPool: Boolean,
-  priceCategory: Number, //1 à 3
+  priceCategory: {type : Number, max: 3, min : 1}, //1 à 3
   rooms: [{ type: mongoose.Types.ObjectId, ref: "rooms" }],
 });
 
