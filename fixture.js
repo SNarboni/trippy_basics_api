@@ -70,10 +70,10 @@ function createMyHotels() {
       address: hotelAdress[i],
       city: "Paris",
       country: "France",
-      stars: Math.floor(Math.random() * (5 - 1 + 1)),
+      stars: Math.floor(Math.random() * 5 + 1),
       hasSpa: Math.random() > 0.5 ? true : false,
       hasPool: Math.random() > 0.5 ? true : false,
-      priceCategory: Math.floor(Math.random() * (3 - 1 + 1)),
+      priceCategory: Math.floor(Math.random() * 3 + 1),
       rooms: [],
     });
   }
@@ -98,9 +98,9 @@ function createMyRestaurants() {
       address: "10 avenue de france",
       city: "Paris",
       country: "France",
-      stars: Math.floor(Math.random() * (3 - 1 + 1)),
+      stars: Math.floor(Math.random() * 3 + 1),
       cuisine: Math.random() > 0.5 ? true : false,
-      priceCategory: Math.floor(Math.random() * (3 - 1 + 1)),
+      priceCategory: Math.floor(Math.random() * 3 + 1),
       tables: [],
     });
   }
@@ -119,7 +119,7 @@ const createRestaurant = async () => {
 const myRooms = [];
 
 function createMyRooms() {
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i <= 21; i++) {
     myRooms.push({
       people: Math.floor(Math.random() * 7),
       price: Math.floor(Math.random() * 191),
@@ -160,7 +160,7 @@ async function addRooms(hotelId, roomId1, roomId2) {
 const myTables = [];
 
 function createMyTables() {
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i <= 21; i++) {
     myTables.push({
       seat: Math.floor(Math.random() * 5 + 2),
       isVIP: Math.random() > 0.65 ? true : false,
@@ -203,9 +203,7 @@ createHotel();
 createRestaurant();
 
 /*
-createTable();
-createHotel();
-createRestaurant();
+
 */
 
 /*

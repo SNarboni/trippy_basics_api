@@ -37,9 +37,9 @@ app.get("/hotels", async (req, res) => {
     console.log("------------------");
     console.log("------------------");
   } else {
-    res.send("Limit or page is not Number");
+    const hotels = await hotelModel.find().populate("rooms");
+    res.json(hotels);
   }
-
 });
 
 app.get("/hotels/:id", async (req, res) => {
@@ -67,12 +67,16 @@ app.put("/hotels/:id", async (req, res) => {
       return Object.assign(model, req.query);
     })
     .then((model) => {
-      return model.save();
-    })
-    .catch((err) => {
-      res.send(err);
+      model
+        .save()
+        .then(() => {
+          res.send("modifié");
+        })
+        .catch((err) => {
+          console.log(err);
+          res.send("erreur vérifiez vos valeurs");
+        });
     });
-  res.send("modifié");
 });
 
 app.delete("/hotels/:id", async (req, res) => {
@@ -88,7 +92,6 @@ app.delete("/hotels/:id", async (req, res) => {
         }
       })
       .lean();
-
   } catch (err) {
     console.log(err);
   }
@@ -99,10 +102,6 @@ app.delete("/hotels/:id", async (req, res) => {
 // RESTAURANT
 
 app.get("/restaurants", async (req, res) => {
-  // console.log(req.query.page);
-  // console.log(req.query.limit);
-  // console.log("Number :", parseInt(req.query.limit) );
-  // res.send("find");
   if (parseInt(req.query.limit) && parseInt(req.query.page)) {
     let limitpage = parseInt(req.query.limit);
     let offset = parseInt(req.query.page) * limitpage;
@@ -117,9 +116,9 @@ app.get("/restaurants", async (req, res) => {
     console.log("------------------");
     console.log("------------------");
   } else {
-    res.send("Limit or page is not Number");
+    const restaurants = await restaurantModel.find().populate("tables");
+    res.json(restaurants);
   }
-
 });
 
 app.get("/restaurants/:id", async (req, res) => {
@@ -156,7 +155,6 @@ app.put("/restaurants/:id", async (req, res) => {
 });
 
 app.delete("/restaurants/:id", async (req, res) => {
-
   try {
     const result = restaurantModel
       .findById(req.params.id, async function (err, restaurant) {
@@ -165,11 +163,12 @@ app.delete("/restaurants/:id", async (req, res) => {
           res.send(`restaurant supprimé`);
         } else {
           console.log("pas trouvé");
-          res.send("erreur le restaurant n'a pas été trouvé ou a deja été supprimé");
+          res.send(
+            "erreur le restaurant n'a pas été trouvé ou a deja été supprimé"
+          );
         }
       })
       .lean();
-
   } catch (err) {
     console.log(err);
   }
@@ -183,18 +182,16 @@ app.get("/rooms", async (req, res) => {
   if (parseInt(req.query.limit) && parseInt(req.query.page)) {
     let limitpage = parseInt(req.query.limit);
     let offset = parseInt(req.query.page) * limitpage;
-    const rooms = await roomModel.find()
-      .limit(limitpage)
-      .skip(offset);
+    const rooms = await roomModel.find().limit(limitpage).skip(offset);
     res.json(rooms);
     console.log(rooms);
     console.log("------------------");
     console.log("------------------");
     console.log("------------------");
   } else {
-    res.send("Limit or page is not Number");
+    const rooms = await roomModel.find();
+    res.json(rooms);
   }
-
 });
 
 app.get("/rooms/:id", async (req, res) => {
@@ -250,22 +247,84 @@ app.delete("/rooms/:id", async (req, res) => {
 
 // ROOM
 
+async function filter(min, max, offset, limit, req, res) {
+  let sitMin = parseInt(min);
+  let sitMax = parseInt(max);
+  let offsetPage = parseInt(offset);
+  let limitPage = parseInt(limit);
+
+  if (sitMax && sitMin && limitPage && offsetPage) {
+    const tables = await tableModel
+      .find({
+        seat: {
+          $gte: sitMin,
+          $lte: sitMax,
+        },
+      })
+      .limit(limitpage)
+      .skip(offsetPage);
+    res.json(tables);
+  } else if (sitMax && limitPage && offsetPage) {
+    const tables = await tableModel
+      .find({
+        seat: {
+          $lte: sitMax,
+        },
+      })
+      .limit(limitpage)
+      .skip(offsetPage);
+    res.json(tables);
+  } else if (sitMin && limitPage && offsetPage) {
+    const tables = await tableModel
+      .find({
+        seat: {
+          $gte: sitMin,
+        },
+      })
+      .limit(limitpage)
+      .skip(offsetPage);
+    res.json(tables);
+  } else if (sitMax && sitMin) {
+    const tables = await tableModel.find({
+      seat: {
+        $gte: sitMin,
+        $lte: sitMax,
+      },
+    });
+    res.json(tables);
+  } else if (limitPage && offsetPage) {
+    const tables = await tableModel.find().limit(limitpage).skip(offsetPage);
+    res.json(tables);
+  } else if (sitMin) {
+    const tables = await tableModel.find({
+      seat: {
+        $gte: sitMin,
+      },
+    });
+    res.json(tables);
+  } else if (sitMax) {
+    const tables = await tableModel.find({
+      seat: {
+        $lte: sitMax,
+      },
+    });
+    res.json(tables);
+  } else {
+    const tables = await tableModel.find();
+    res.json(tables);
+  }
+}
 // TABLE
 
 app.get("/tables", async (req, res) => {
-  if (parseInt(req.query.limit) && parseInt(req.query.page)) {
-    let limitpage = parseInt(req.query.limit);
-    let offset = parseInt(req.query.page) * limitpage;
-    const tables = await tableModel.find().limit(limitpage).skip(offset);
-    res.json(tables);
-    console.log(tables);
-    console.log("------------------");
-    console.log("------------------");
-    console.log("------------------");
-  } else {
-    res.send("Limit or page is not Number")
-  }
-
+  filter(
+    req.query.sitMin,
+    req.query.sitMax,
+    req.query.offset,
+    req.query.limit,
+    req,
+    res
+  );
 });
 
 app.get("/tables/:id", async (req, res) => {
