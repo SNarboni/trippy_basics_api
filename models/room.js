@@ -1,13 +1,11 @@
 const mongoose = require("mongoose");
 
 const roomSchema = new mongoose.Schema({
-    people: Number,
-    price: Number,
-    isBathroom: Boolean,
-    hotels :  [{type : mongoose.Types.ObjectId, ref:"hotels"}]
+  people: Number,
+  price: Number,
+  isBathroom: Boolean,
 });
 
+const roomModel = mongoose.model("rooms", roomSchema);
 
-const roomSchema = mongoose.model("rooms", roomSchema);
-
-module.exports = roomSchema;
+module.exports = roomModel;

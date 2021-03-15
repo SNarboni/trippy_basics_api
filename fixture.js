@@ -74,6 +74,7 @@ function createMyHotels() {
       hasSpa: Math.random() > 0.5 ? true : false,
       hasPool: Math.random() > 0.5 ? true : false,
       priceCategory: Math.floor(Math.random() * 4),
+      rooms: [],
     });
   }
 }
@@ -82,7 +83,6 @@ const createHotel = async () => {
   createMyHotels();
   await hotelModel.deleteMany({}).exec();
   const result = await hotelModel.create(myHotels);
-  console.log(result);
 };
 
 //HOTELS
@@ -101,6 +101,7 @@ function createMyRestaurants() {
       stars: 3,
       cuisine: true,
       priceCategory: 3,
+      tables: [],
     });
   }
 }
@@ -109,10 +110,110 @@ const createRestaurant = async () => {
   createMyRestaurants();
   await restaurantModel.deleteMany({}).exec();
   const result = await restaurantModel.create(myRestaurants);
-  console.log(result);
 };
 
 //RESTAURANTS
 
+// ROOMS
+
+const myRooms = [];
+
+function createMyRooms() {
+  for (let i = 0; i < 4; i++) {
+    myRooms.push({
+      people: Math.floor(Math.random() * 7),
+      price: Math.floor(Math.random() * 191),
+      isBathroom: Math.random() > 0.5 ? true : false,
+    });
+  }
+}
+
+const createRoom = async () => {
+  createMyRooms();
+  await roomModel.deleteMany({}).exec();
+  const result = await roomModel.create(myRooms);
+};
+
+// HOTELS ROOMS
+
+async function addRooms(hotelId, roomId1, roomId2) {
+  try {
+    const roomObject1 = await roomModel.findById(roomId1);
+    const roomObject2 = await roomModel.findById(roomId2);
+    const hotelObject = await hotelModel.findById(hotelId);
+
+    hotelObject.rooms.push(roomId1, roomId2);
+
+    const result = await hotelModel.updateOne({ _id: hotelId }, hotelObject);
+    console.log(result);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// HOTELS ROOMS
+
+// ROOMS
+
+// TABLES
+
+const myTables = [];
+
+function createMyTables() {
+  for (let i = 0; i < 4; i++) {
+    myTables.push({
+      seat: Math.floor(Math.random() * 5 + 2),
+      isVIP: Math.random() > 0.65 ? true : false,
+    });
+  }
+}
+
+const createTable = async () => {
+  createMyTables();
+  await tableModel.deleteMany({}).exec();
+  const result = await tableModel.create(myTables);
+};
+
+// RESTAURANT TABLE
+
+async function addTables(restaurantId, tableId1, tableId2) {
+  try {
+    const tableObject1 = await tableModel.findById(tableId1);
+    const tableObject2 = await tableModel.findById(tableId2);
+    const restaurantObject = await restaurantModel.findById(restaurantId);
+
+    restaurantObject.tables.push(tableId1, tableId2);
+
+    const result = await restaurantModel.updateOne(
+      { _id: restaurantId },
+      restaurantObject
+    );
+    console.log(result);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// RESTAURANT TABLE
+
+// TABLES
+/*
+createRoom();
+createTable();
 createHotel();
 createRestaurant();
+*/
+
+/*
+
+addRooms(
+  "604f48e4fe8c9c2dc99c5a4b",
+  "604f48e5fe8c9c2dc99c5a77",
+  "604f48e5fe8c9c2dc99c5a78"
+);
+addTables(
+  "604f48e5fe8c9c2dc99c5a63",
+  "604f48e5fe8c9c2dc99c5a7c",
+  "604f48e5fe8c9c2dc99c5a7d"
+);
+*/

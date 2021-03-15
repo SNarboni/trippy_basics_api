@@ -1,12 +1,10 @@
 const mongoose = require("mongoose");
 
 const tableSchema = new mongoose.Schema({
-    seat: Number,
-    isVIP: Boolean,
-    restaurants :  [{type : mongoose.Types.ObjectId, ref:"restaurants"}]
+  seat: Number,
+  isVIP: Boolean,
 });
 
+const tableModel = mongoose.model("tables", tableSchema);
 
-const tableSchema = mongoose.model("tables", tableSchema);
-
-module.exports = tableSchema;
+module.exports = tableModel;
