@@ -138,9 +138,9 @@ const createRoom = async () => {
 
 async function addRooms(hotelId, roomId1, roomId2) {
   try {
+    const hotelObject = await hotelModel.findById(hotelId);
     const roomObject1 = await roomModel.findById(roomId1);
     const roomObject2 = await roomModel.findById(roomId2);
-    const hotelObject = await hotelModel.findById(hotelId);
 
     hotelObject.rooms.push(roomId1, roomId2);
 
@@ -197,8 +197,9 @@ async function addTables(restaurantId, tableId1, tableId2) {
 // RESTAURANT TABLE
 
 // TABLES
-/*
 createRoom();
+
+/*
 createTable();
 createHotel();
 createRestaurant();

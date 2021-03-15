@@ -145,7 +145,7 @@ app.delete("/restaurants/:id", async (req, res) => {
 // ROOM
 
 app.get("/rooms", async (req, res) => {
-  const rooms = await roomModel.find().limit(limitpage).skip(offset);
+  const rooms = await roomModel.find();
   res.json(rooms);
   console.log(rooms);
   console.log("------------------");
@@ -185,8 +185,20 @@ app.put("/rooms/:id", async (req, res) => {
 
 app.delete("/rooms/:id", async (req, res) => {
   try {
-    await roomModel.deleteOne({ _id: req.params.id });
-    res.send(`Room supprimé`);
+    const result = roomModel
+      .findById(req.params.id, async function (err, room) {
+        if (room) {
+          await roomModel.deleteOne({ _id: req.params.id });
+          res.send(`Room supprimé`);
+          console.log(room);
+        } else {
+          console.log("pas trouvé");
+          res.send(
+            "erreur la chambre n'a pas été trouvé ou a deja été supprimé"
+          );
+        }
+      })
+      .lean();
   } catch (err) {
     console.log(err);
   }
@@ -239,8 +251,17 @@ app.put("/tables/:id", async (req, res) => {
 
 app.delete("/tables/:id", async (req, res) => {
   try {
-    await tableModel.deleteOne({ _id: req.params.id });
-    res.send(`Table supprimé`);
+    const result = tableModel
+      .findById(req.params.id, async function (err, table) {
+        if (table) {
+          await tableModel.deleteOne({ _id: req.params.id });
+          res.send(`Table supprimé`);
+        } else {
+          console.log("pas trouvé");
+          res.send("erreur la table n'a pas été trouvé ou a deja été supprimé");
+        }
+      })
+      .lean();
   } catch (err) {
     console.log(err);
   }
