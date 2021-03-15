@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 
 const hotelModel = require("./models/hotel");
 const restaurantModel = require("./models/restaurant");
+const roomModel = require("./models/room");
+const tableModel = require("./models/table");
 
 mongoose.connect("mongodb://localhost:27017/trippy_binome", () => {
   console.log("connecté");
